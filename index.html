@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neo-Tokyo Nexus | Cyberpunk City Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0a12;
+            --darker-bg: #050508;
+            --panel-bg: rgba(10, 15, 30, 0.8);
+            --text-primary: #e0e0ff;
+            --text-secondary: #a0a0c0;
+            --glow-blue: 0 0 10px rgba(0, 243, 255, 0.7);
+            --glow-pink: 0 0 10px rgba(255, 0, 255, 0.7);
+            --glow-green: 0 0 10px rgba(57, 255, 20, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .cyberpunk-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--neon-blue);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            text-shadow: var(--glow-blue);
+            letter-spacing: 2px;
+        }
+
+        .weather-display {
+            background: var(--panel-bg);
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid var(--neon-green);
+            box-shadow: var(--glow-green);
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+        }
+
+        .weather-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .temp {
+            font-size: 1.2rem;
+            color: var(--neon-green);
+        }
+
+        /* Navigation */
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--neon-pink);
+            border: 1px solid var(--neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        /* Main Content */
+        .hero {
+            position: relative;
+            height: 400px;
+            margin-bottom: 40px;
+            border: 1px solid var(--neon-blue);
+            box-shadow: var(--glow-blue);
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            padding: 40px;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start; /* align items to left so map sits next to text */
+            align-items: center;
+            gap: 12px; /* reduce gap so map is closer to text */
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--neon-blue);
+            text-shadow: var(--glow-blue);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            color: var(--text-secondary);
+        }
+
+        /* Map image to the right of the hero text */
+        .hero-text {
+            max-width: 65%;
+            flex: 1; /* allow text area to grow and push map to the right edge of the text */
+        }
+
+        .map-rect {
+            width: 320px; /* increased size */
+            max-width: 35%;
+            height: auto;
+            display: block;
+            margin-left: 12px; /* shift map closer to the text */
+            border: 3px solid rgba(255,255,255,0.12); /* rectangular border only */
+            border-radius: 0; /* ensure no rounding */
+            box-shadow: none; /* keep it simple, rectangular-only */
+            object-fit: cover;
+            background-color: transparent;
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 50px;
+            padding: 30px;
+            background: var(--panel-bg);
+            border: 1px solid var(--neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        section h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--neon-pink);
+            text-shadow: var(--glow-pink);
+            border-bottom: 1px solid var(--neon-pink);
+            padding-bottom: 10px;
+        }
+
+        .district-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .district-card {
+            background: rgba(20, 25, 40, 0.7);
+            padding: 20px;
+            border: 1px solid var(--neon-blue);
+            transition: all 0.3s ease;
+        }
+
+        .district-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-blue);
+        }
+
+        .district-card h3 {
+            color: var(--neon-blue);
+            margin-bottom: 10px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Food Stall 3D Interface */
+        .food-stall-container {
+            position: relative;
+            height: 400px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .food-stall-3d {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .stall-side {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid var(--neon-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-green);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            box-shadow: var(--glow-green);
+        }
+
+        .stall-front {
+            transform: translateZ(100px);
+        }
+
+        .stall-back {
+            transform: rotateY(180deg) translateZ(100px);
+        }
+
+        .stall-left {
+            transform: rotateY(-90deg) translateZ(100px);
+        }
+
+        .stall-right {
+            transform: rotateY(90deg) translateZ(100px);
+        }
+
+        .stall-top {
+            transform: rotateX(90deg) translateZ(75px);
+            width: 200px;
+            height: 200px;
+        }
+
+        .stall-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .control-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 10px 20px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: var(--glow-green);
+        }
+
+        /* Slang and Tips */
+        .slang-list, .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .slang-item, .tip-item {
+            background: rgba(20, 25, 40, 0.7);
+            padding: 15px;
+            border-left: 3px solid var(--neon-pink);
+        }
+
+        .slang-term, .tip-title {
+            color: var(--neon-pink);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid var(--neon-blue);
+            margin-top: 50px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            /* Stack hero content on small screens and make the map responsive */
+            .hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 20px;
+            }
+
+            .hero-text {
+                max-width: 100%;
+            }
+
+            .map-rect {
+                max-width: 280px;
+                width: 100%;
+                align-self: center;
+            }
+            
+            .district-grid, .slang-list, .tips-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyberpunk-container">
+        <header>
+            <div class="logo">Neo-Tokyo Nexus</div>
+            <div class="weather-display">
+                <div class="weather-icon">⛅</div>
+                <div class="temp">26°C | 79°F</div>
+                <div class="conditions">Partly Cloudy</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#districts">Districts</a></li>
+                    <li><a href="#food">Food Stalls</a></li>
+                    <li><a href="#slang">Local Slang</a></li>
+                    <li><a href="#tips">Survival Tips</a></li>
+                    <li><a href="#access">Access Panels</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>WELCOME TO NEO-TOKYO</h1>
+                    <p>The year is 2077. Welcome to the most advanced, dangerous, and vibrant city on Earth. Where chrome meets flesh and data flows like water.</p>
+                </div>
+                <!-- Map image (place map.jpeg in the same folder as this HTML file) -->
+                <img src="map.jpeg" alt="Neo-Tokyo Map" class="map-rect">
+            </div>
+        </div>
+
+        <section id="districts">
+            <h2>CITY DISTRICTS</h2>
+            <div class="district-grid">
+                <div class="district-card">
+                    <h3>Ginza Heights</h3>
+                    <p>Corporate central where megacorps tower over the city. All chrome and glass, but watch your step in the back alleys.</p>
+                </div>
+                <div class="district-card">
+                    <h3>Akihabara Circuit</h3>
+                    <p>Tech heaven and black market central. If it runs on electricity, you can find it here - legally or otherwise.</p>
+                </div>
+                <div class="district-card">
+                    <h3>Shinjuku Slums</h3>
+                    <p>Where the city's underbelly thrives. Not for tourists, but if you need something done off the books...</p>
+                </div>
+                <div class="district-card">
+                    <h3>Roppongi Entertainment</h3>
+                    <p>Neon-drenched nightlife district. Clubs, bars, and pleasure palaces that never sleep.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="food">
+            <h2>FOOD STALL INTERFACE</h2>
+            <div class="food-stall-container">
+                <div class="food-stall-3d" id="stall3d">
+                    <div class="stall-side stall-front">RAMEN YA</div>
+                    <div class="stall-side stall-back">SYNTH-NOODLES</div>
+                    <div class="stall-side stall-left">OPEN 24/7</div>
+                    <div class="stall-side stall-right">CREDITS ACCEPTED</div>
+                    <div class="stall-side stall-top">NEOTOKYO EATS</div>
+                </div>
+            </div>
+            <div class="stall-controls">
+                <button class="control-btn" onclick="rotateStall('left')">Rotate Left</button>
+                <button class="control-btn" onclick="rotateStall('right')">Rotate Right</button>
+                <button class="control-btn" onclick="resetStall()">Reset View</button>
+            </div>
+            <p>Visit Ramen Ya in Akihabara Circuit for the best synthetic noodles in the city. Their cyber-ramen comes with customizable nutrient packs!</p>
+        </section>
+
+        <section id="slang">
+            <h2>LOCAL SLANG</h2>
+            <div class="slang-list">
+                <div class="slang-item">
+                    <div class="slang-term">Zeroed</div>
+                    <div class="slang-def">Killed, eliminated, or otherwise rendered non-functional.</div>
+                </div>
+                <div class="slang-item">
+                    <div class="slang-term">Chrome</div>
+                    <div class="slang-def">Cyberware enhancements, from basic implants to full-body conversions.</div>
+                </div>
+                <div class="slang-item">
+                    <div class="slang-term">Netrunner</div>
+                    <div class="slang-def">A hacker who navigates the cyberspace matrix.</div>
+                </div>
+                <div class="slang-item">
+                    <div class="slang-term">Corpo</div>
+                    <div class="slang-def">Corporate employee, usually with enhanced capabilities and questionable morals.</div>
+                </div>
+                <div class="slang-item">
+                    <div class="slang-term">Eddies</div>
+                    <div class="slang-def">Slang for money, credits, or cryptocurrency.</div>
+                </div>
+                <div class="slang-item">
+                    <div class="slang-term">Gonk</div>
+                    <div class="slang-def">An idiot or fool; someone who makes stupid decisions.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>HOW TO NOT GET ZEROED</h2>
+            <div class="tips-list">
+                <div class="tip-item">
+                    <div class="tip-title">Watch Your Back in Shinjuku</div>
+                    <div class="tip-content">The slums aren't a tourist attraction. Travel in groups and avoid eye contact with gangers.</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-title">Don't Flash Your Chrome</div>
+                    <div class="tip-content">Expensive cyberware makes you a target. Keep high-end mods concealed when possible.</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-title">Corpo Zones Have Different Rules</div>
+                    <div class="tip-content">Corporate security has shoot-to-kill authorization. Don't trespass in Ginza Heights.</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-title">Data Hygiene is Critical</div>
+                    <div class="tip-content">Use ICE (Intrusion Countermeasures) on your personal devices. Netrunners are always scanning for vulnerabilities.</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-title">Know Your Food Sources</div>
+                    <div class="tip-content">Stick to licensed food stalls. Unregulated synth-meat can have... unexpected side effects.</div>
+                </div>
+                <div class="tip-item">
+                    <div class="tip-title">Credits Over Cash</div>
+                    <div class="tip-content">Digital transactions are safer than physical currency, which attracts unwanted attention.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="access">
+            <h2>ACCESS PANELS</h2>
+            <p>SECURITY CLEARANCE REQUIRED</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <input type="password" placeholder="Enter Access Code" style="flex-grow: 1; padding: 10px; background: var(--darker-bg); border: 1px solid var(--neon-blue); color: var(--text-primary);">
+                <button class="control-btn">AUTHENTICATE</button>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: var(--text-secondary);">Warning: Unauthorized access attempts will be logged and reported to corporate security.</p>
+        </section>
+
+        <footer>
+            <p>Neo-Tokyo Nexus Interface v2.3.7 | DataStream: Encrypted | Last Update: 2077-10-23 20:47</p>
+            <p>©️ 2077 Arasaka Corporation. All rights reserved. Unauthorized access prohibited.</p>
+        </footer>
+    </div>
+
+    <script>
+        let rotationY = 0;
+        let rotationX = 0;
+        const stall3d = document.getElementById('stall3d');
+
+        function rotateStall(direction) {
+            if (direction === 'left') {
+                rotationY -= 45;
+            } else if (direction === 'right') {
+                rotationY += 45;
+            }
+            updateStallRotation();
+        }
+
+        function resetStall() {
+            rotationY = 0;
+            rotationX = 0;
+            updateStallRotation();
+        }
+
+        function updateStallRotation() {
+            stall3d.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg)`;
+        }
+
+        // Simulate weather changes
+        const weatherIcons = ['⛅', '🌧️', '🌤️', '🔆', '🌙'];
+        const weatherConditions = ['Partly Cloudy', 'Rainy', 'Mostly Sunny', 'Clear', 'Night Cycle'];
+        const temperatures = ['26°C | 79°F', '22°C | 72°F', '29°C | 84°F', '31°C | 88°F', '24°C | 75°F'];
+        
+        function changeWeather() {
+            const randomIndex = Math.floor(Math.random() * weatherIcons.length);
+            document.querySelector('.weather-icon').textContent = weatherIcons[randomIndex];
+            document.querySelector('.temp').textContent = temperatures[randomIndex];
+            document.querySelector('.conditions').textContent = weatherConditions[randomIndex];
+        }
+
+        // Change weather every 30 seconds
+        setInterval(changeWeather, 30000);
+    </script>
+</body>
+</html>
